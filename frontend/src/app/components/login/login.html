@@ -1,0 +1,66 @@
+<div class="login-container">
+  <div class="login-card">
+    <!-- Page title and description -->
+    <div class="login-header">
+      <h1>Welcome to LogiFlow!</h1>
+      <p>Sign in to manage your shipments</p>
+    </div>
+
+    <!-- Main login form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      
+      <!-- Username input -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          id="username"
+          type="text"
+          formControlName="username"
+          class="form-input"
+          placeholder="Enter your username"
+          [class.error]="isFieldInvalid('username')">
+        <span *ngIf="isFieldInvalid('username')" class="error-text">
+          <span *ngIf="loginForm.get('username')?.errors?.['required']">Username is required</span>
+          <span *ngIf="loginForm.get('username')?.errors?.['minlength']">Minimum 3 characters</span>
+        </span>
+      </div>
+
+      <!-- Password input -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          id="password"
+          type="password"
+          formControlName="password"
+          class="form-input"
+          placeholder="Enter your password"
+          [class.error]="isFieldInvalid('password')">
+        <span *ngIf="isFieldInvalid('password')" class="error-text">
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Minimum 6 characters</span>
+        </span>
+      </div>
+
+      <!-- error messages from server -->
+      <div *ngIf="error" class="alert-error">
+        {{ error }}
+      </div>
+
+      <!-- Submit button -->
+      <button 
+        type="submit"
+        class="btn-submit"
+        [disabled]="loginForm.invalid || loading">
+        <span *ngIf="loading" class="spinner"></span>
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+
+    </form>
+
+    <!-- Registration link -->
+    <div class="signup-text">
+      Don't have an account yet? 
+      <a routerLink="/register" class="link">Register here</a>
+    </div>
+  </div>
+</div>
