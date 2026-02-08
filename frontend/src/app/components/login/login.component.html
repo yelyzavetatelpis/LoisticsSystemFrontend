@@ -1,0 +1,55 @@
+<!-- full-page layout  -->
+<div class="container">
+  
+  <!-- login form  -->
+  <div class="card">
+    <h1>Welcome to LogiFlow</h1>
+    <p>Sign in to manage your shipments</p>
+
+    <!-- login form -->
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+      
+      <!-- email input section -->
+      <div class="input-group">
+        <label>Email</label>
+        <input 
+          type="email" 
+          [(ngModel)]="email" 
+          name="email"
+          placeholder="Enter your email"
+          required
+          email
+          #emailField="ngModel">
+        <!-- error under email input -->
+        <span class="field-error" *ngIf="emailField.touched && emailField.invalid">
+          Please enter a valid email
+        </span>
+      </div>
+
+      <!-- password input section -->
+      <div class="input-group">
+        <label>Password</label>
+        <input 
+          type="password" 
+          [(ngModel)]="password" 
+          name="password"
+          placeholder="Enter your password"
+          required
+          minlength="6"
+          #passwordField="ngModel">
+        <!-- error under password input -->
+        <span class="field-error" *ngIf="passwordField.touched && passwordField.invalid">
+          Password must be at least 6 characters
+        </span>
+      </div>
+
+      <!-- submit button -->
+      <button type="submit">Sign In</button>
+    </form>
+
+    <!-- register link under the form -->
+    <p class="footer">
+      Don't have an account? <a routerLink="/register">Register</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+/* login form styling */
+* {
+  box-sizing: border-box;
+}
+
+/* centering the form content*/
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: Arial, sans-serif; 
+}
+
+/* login container */
+.card {
+  background: #fff;
+  padding: 45px;
+  border-radius: 10px;
+  max-width: 400px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); 
+}
+
+/* form title styling*/
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 5px;
+  font-size: 30px;
+}
+
+/* text under the title */
+p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 35px;
+}
+
+/* spacing between each label */
+.input-group {
+  margin-bottom: 18px;
+}
+
+/* labels above the form inputs */
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 600;
+}
+
+/*  input styling for both email & password */
+input {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  background: #fafafa;
+}
+
+/* button for submitting */
+button {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* effect on hover */
+button:hover {
+  opacity: 0.95;
+}
+
+/*  greyed out in the disabled state*/
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* footer text under the form to link the registration form */
+.footer {
+  text-align: center;
+  margin-top: 50px; 
+  color: #666;
+}
+
+/* link styles*/
+a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* field-level errors displayed below inputs */
+.field-error {
+  display: block;
+  color: #d63031;
+  font-size: 13px;
+  margin-top: 5px;
+}

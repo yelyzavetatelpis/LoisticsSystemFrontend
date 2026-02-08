@@ -1,84 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  AbstractControl,
-  ReactiveFormsModule
-} from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink], 
-  templateUrl: './register.html',
-  styleUrls: ['./register.css']
+  imports: [CommonModule, FormsModule, RouterModule],
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
-
-  form!: FormGroup;
-  isSubmitting = false;
+export class RegisterComponent {
+  firstName = '';
+  lastName = '';
+  email = '';
+  mobileNumber = '';
+  password = '';
+  confirmPassword = '';
   error = '';
 
   constructor(
-    private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.form = this.fb.group(
-      {
-        fullName: ['', [Validators.required, Validators.minLength(3)]],
-        username: ['', [Validators.required, Validators.minLength(3)]],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confirmPassword: ['', Validators.required]
-      },
-      { validators: this.passwordMatchValidator }
-    );
-  }
+  onSubmit(): void {
+    this.error = '';
 
-  passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
-    const password = control.get('password')?.value;
-    const confirmPassword = control.get('confirmPassword')?.value;
-
-    if (!password || !confirmPassword) {
-      return null;
-    }
-
-    return password === confirmPassword ? null : { passwordMismatch: true };
-  }
-
-  submit(): void {
-    if (this.form.invalid) {
-      this.error = 'Please fill all fields correctly.';
+    if (this.password !== this.confirmPassword) {
+      this.error = 'Passwords do not match';
       return;
     }
 
-    this.isSubmitting = true;
-    this.error = '';
-
-    const payload = {
-      fullName: this.form.value.fullName,
-      username: this.form.value.username,
-      email: this.form.value.email,
-      password: this.form.value.password,
-      roleId: 2
+    const data = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      mobileNumber: this.mobileNumber,
+      password: this.password,
+      roleId: 4
     };
 
-    this.authService.register(payload).subscribe({
+    this.authService.register(data).subscribe({
       next: () => {
-        this.isSubmitting = false;
         this.router.navigate(['/login']);
       },
-      error: (err) => {
-        this.isSubmitting = false;
-        this.error = err?.error?.message || 'Registration failed. Please try again.';
+      error: () => {
+        this.error = 'Registration failed. Please try again.';
       }
     });
   }

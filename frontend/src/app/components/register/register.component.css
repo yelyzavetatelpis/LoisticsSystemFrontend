@@ -1,0 +1,118 @@
+/* font style for entire page */
+* {
+  font-family: Arial, sans-serif;
+}
+
+
+/* full-page layout */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+}
+
+/* form container */
+.card {
+  background: white;
+  padding: 45px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* form title */
+h1 {
+  font-size: 30px;
+  text-align: center;
+  color: #333;
+  font-weight: 700; 
+  font-family: inherit; 
+}
+
+/* subtext below title */
+p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 35px;
+}
+
+/* input wrapper spacing */
+.input-group {
+  margin-bottom: 18px;
+}
+
+/* input labels */
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 600;
+}
+
+/* input fields */
+input {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit; 
+  font-size: 15px;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+/* submit button */
+button {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* button hover effect */
+button:hover {
+  opacity: 0.95;
+}
+
+/* disabled state */
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* footer below the form */
+.footer {
+  text-align: center;
+  margin-top: 25px;
+  padding-top: 25px;
+  color: #666;
+}
+
+/* link styles */
+a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* inline error messages under inputs */
+.field-error {
+  display: block;
+  color: #d63031;
+  font-size: 13px;
+  margin-top: 5px;
+}
