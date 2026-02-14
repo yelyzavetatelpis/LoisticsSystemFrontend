@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -16,26 +17,18 @@ export class LoginComponent {
   password = '';
   error = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(): void {
+  onSubmit() {
     this.error = '';
 
-    const credentials = {
-      email: this.email,
-      password: this.password
-    };
-
-    this.authService.login(credentials).subscribe({
+    this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         localStorage.setItem('authToken', response.token);
-        this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard']);
       },
-      error: () => {
-        this.error = 'Invalid email or password';
+      error: (err) => {
+       this.error = 'Invalid email or password';
       }
     });
   }

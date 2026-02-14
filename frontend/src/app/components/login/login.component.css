@@ -4,7 +4,7 @@
 }
 
 /* centering the form content*/
-.container {
+  .container {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -14,7 +14,7 @@
   font-family: Arial, sans-serif; 
 }
 
-/* login container */
+  /* login container */
 .card {
   background: #fff;
   padding: 45px;
@@ -23,7 +23,7 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); 
 }
 
-/* form title styling*/
+  /* form title styling*/
 h1 {
   text-align: center;
   color: #333;
@@ -31,14 +31,14 @@ h1 {
   font-size: 30px;
 }
 
-/* text under the title */
+  /* text under the title */
 p {
   text-align: center;
   color: #666;
   margin-bottom: 35px;
 }
 
-/* spacing between each label */
+  /* spacing between each label */
 .input-group {
   margin-bottom: 18px;
 }
@@ -47,11 +47,11 @@ p {
 label {
   display: block;
   margin-bottom: 6px;
-  color: #333;
+color: #333;
   font-weight: 600;
 }
 
-/*  input styling for both email & password */
+/*  input styling for both email and password */
 input {
   width: 100%;
   padding: 13px;
@@ -86,7 +86,7 @@ button:disabled {
 }
 
 /* footer text under the form to link the registration form */
-.footer {
+  .footer {
   text-align: center;
   margin-top: 50px; 
   color: #666;
@@ -95,7 +95,7 @@ button:disabled {
 /* link styles*/
 a {
   color: #667eea;
-  text-decoration: none;
+   text-decoration: none;
   font-weight: 600;
 }
 

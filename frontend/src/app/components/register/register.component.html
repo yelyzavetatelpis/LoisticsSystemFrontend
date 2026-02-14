@@ -1,4 +1,4 @@
-<!-- full-page layout wrapper -->
+<!-- full-page layout -->
 <div class="container">
 
   <!-- register form card -->
@@ -101,7 +101,7 @@
         </span>
         <!-- checking if passwords match -->
         <span class="field-error" *ngIf="confirmField.touched && password !== confirmPassword && confirmPassword !== ''">
-          Passwords do not match
+          Passwords do not match, Please try again!
         </span>
       </div>
 

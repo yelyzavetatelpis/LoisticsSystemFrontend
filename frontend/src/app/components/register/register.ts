@@ -27,7 +27,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     this.error = '';
-
+  debugger;
     if (this.password !== this.confirmPassword) {
       this.error = 'Passwords do not match';
       return;

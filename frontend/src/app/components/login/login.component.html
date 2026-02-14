@@ -1,8 +1,8 @@
-<!-- full-page layout  -->
+  <!-- full-page layout  -->
 <div class="container">
   
   <!-- login form  -->
-  <div class="card">
+    <div class="card">
     <h1>Welcome to LogiFlow</h1>
     <p>Sign in to manage your shipments</p>
 
@@ -20,6 +20,7 @@
           required
           email
           #emailField="ngModel">
+
         <!-- error under email input -->
         <span class="field-error" *ngIf="emailField.touched && emailField.invalid">
           Please enter a valid email
@@ -50,6 +51,9 @@
     <!-- register link under the form -->
     <p class="footer">
       Don't have an account? <a routerLink="/register">Register</a>
+    </p>
+    <p class="footer">
+      Check board <a routerLink="/dashboard"> Board</a>
     </p>
   </div>
 </div>
