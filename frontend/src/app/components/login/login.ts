@@ -18,8 +18,11 @@ export class LoginComponent {
   error = '';
 
   constructor(private authService: AuthService, private router: Router) {}
-
+  ngOnInit() {if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }}
   onSubmit() {
+    debugger;
     this.error = '';
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
