@@ -1,0 +1,41 @@
+<div class="sidebar d-flex flex-column">
+    <div class="logo-section mb-5">
+        <h3 class="fw-bold text-white mb-0">COURIER</h3>
+        <small style="color: #8E92B2; font-size: 0.8rem;">LogiFlow System</small>
+    </div>
+
+    <nav class="nav nav-pills flex-column mb-auto">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-grid-fill"></i> Overview
+        </a>
+        <a routerLink="/shipments" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-box-seam"></i> Shipments
+        </a>
+        <a routerLink="/trips" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-truck"></i> Trips
+        </a>
+        <a routerLink="/vehicles" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-car-front"></i> Vehicles
+        </a>
+        <a routerLink="/drivers" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-person-badge"></i> Drivers
+        </a>
+        <a routerLink="/statistics" routerLinkActive="active" class="nav-link">
+            <i class="bi bi-bar-chart"></i> Statistics
+        </a>
+    </nav>
+
+    <div class="upgrade-card">
+        <p class="small fw-bold text-white mb-1">Upgrade to Pro</p>
+        <p style="color: #8E92B2; font-size: 0.7rem; line-height: 1.4; margin-bottom: 0;">Get 15 days free and unlock
+            exclusive features</p>
+        <button class="btn-upgrade">Upgrade</button>
+    </div>
+
+    <div class="user-section mt-5 border-top border-secondary pt-4">
+        <a (click)="logout()" class="nav-link cursor-pointer p-0"
+            style="display: flex; align-items: center; background: transparent;">
+            <i class="bi bi-box-arrow-right"></i> Log out
+        </a>
+    </div>
+</div>

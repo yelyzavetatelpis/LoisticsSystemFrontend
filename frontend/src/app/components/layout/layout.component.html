@@ -1,0 +1,48 @@
+<div class="main-layout">
+    <app-sidebar></app-sidebar>
+
+    <div class="content-area">
+        <header class="top-bar">
+            <div class="search-container">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search anything..">
+            </div>
+
+            <div class="d-flex align-items-center gap-4">
+                <button class="notification-btn">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="dot"></span>
+                </button>
+                <div class="user-profile d-flex align-items-center gap-3 cursor-pointer">
+                    <div class="user-dropdown">
+                        <img src="https://ui-avatars.com/api/?name={{ (currentUser$ | async)?.username }}&background=6366f1&color=fff&rounded=true"
+                            alt="Avatar"
+                            (click)="toggleUserDropdown()">
+                        
+                        <div class="dropdown-menu" *ngIf="showUserDropdown">
+                            <div class="dropdown-header">
+                                <strong>{{ (currentUser$ | async)?.username }}</strong>
+                                <small>{{ (currentUser$ | async)?.role }}</small>
+                            </div>
+                            <hr>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-person"></i> Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="bi bi-gear"></i> Settings
+                            </a>
+                            <hr>
+                            <button class="dropdown-item logout-btn" (click)="logout()">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main style="padding: 2rem 3rem;">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>
