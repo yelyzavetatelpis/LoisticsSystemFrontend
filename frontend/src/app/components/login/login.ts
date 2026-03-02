@@ -17,21 +17,25 @@ export class LoginComponent {
   password = '';
   error = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
-  ngOnInit() {if (this.authService.isAuthenticated()) {
+  constructor(private authService: AuthService, private router: Router) { }
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
-    }}
+    }
+  }
   onSubmit() {
-    debugger;
+   
     this.error = '';
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         localStorage.setItem('authToken', response.token);
-          this.router.navigate(['/dashboard']);
+        // this.router.navigate(['/dashboard']);
+        const redirectUrl = this.authService.redirectBasedOnRole();
+        this.router.navigate([redirectUrl]);
       },
       error: (err) => {
-       this.error = 'Invalid email or password';
+        this.error = 'Invalid email or password';
       }
     });
   }

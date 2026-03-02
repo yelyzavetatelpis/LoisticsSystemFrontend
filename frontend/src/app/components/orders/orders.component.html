@@ -1,0 +1,86 @@
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <h2>Place a New Order</h2>
+  </div>
+
+
+  <form #orderForm="ngForm" (ngSubmit)="onSubmit()" >
+    <div class="form-card">
+      <!-- Pickup Section -->
+      <div class="form-section">
+        <h3>Pickup Details</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Pickup Street</label>
+            <input type="text" placeholder="Enter pickup street" [(ngModel)]="pickupStreet" name="pickupStreet" required>
+          </div>
+
+          <div class="form-group">
+            <label>Pickup City</label>
+            <input type="text" placeholder="Enter pickup city" [(ngModel)]="pickupCity" name="pickupCity" required>
+          </div>
+
+          <div class="form-group">
+            <label>Pickup Postal Code</label>
+            <input type="text" placeholder="Enter postal code" [(ngModel)]="pickupPostalCode" name="pickupPostalCode" required>
+          </div>
+
+          <div class="form-group">
+            <label>Preferred Pickup Date</label>
+            <input type="date" [(ngModel)]="pickupDate" name="pickupDate" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delivery Section -->
+      <div class="form-section">
+        <h3>Delivery Details</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Delivery Street</label>
+            <input type="text" placeholder="Enter delivery street" [(ngModel)]="deliveryStreet" name="deliveryStreet" required>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery City</label>
+            <input type="text" placeholder="Enter delivery city" [(ngModel)]="deliveryCity" name="deliveryCity" required>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Postal Code</label>
+            <input type="text" placeholder="Enter postal code" [(ngModel)]="deliveryPostalCode" name="deliveryPostalCode" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- Package Section -->
+      <div class="form-section">
+        <h3>Order Information</h3>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Order Weight (kg)</label>
+            <input type="number" placeholder="Enter weight" [(ngModel)]="packageWeight" name="packageWeight" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label>Order Description</label>
+            <textarea rows="3" placeholder="Enter description" [(ngModel)]="orderdescription" name="orderdescription"></textarea>
+          </div>
+        </div>
+      </div>
+
+
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button class="btn-secondary" >Cancel</button>
+        <button type="submit" class="btn-primary">Create Order</button>
+      </div>
+    </div>
+  </form>
+</div>
+

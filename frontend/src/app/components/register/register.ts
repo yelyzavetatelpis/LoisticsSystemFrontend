@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-register',
@@ -19,15 +20,17 @@ export class RegisterComponent {
   password = '';
   confirmPassword = '';
   error = '';
+  successMessage = '';
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   onSubmit(): void {
     this.error = '';
-  debugger;
+   
     if (this.password !== this.confirmPassword) {
       this.error = 'Passwords do not match';
       return;
@@ -43,11 +46,23 @@ export class RegisterComponent {
     };
 
     this.authService.register(data).subscribe({
-      next: () => {
-        this.router.navigate(['/login']);
+       
+      next: (res: any) => {
+          console.log("REGISTER RESPONSE:", res);
+        this.successMessage = res.message;   // coming from .NET API
+        this.error = '';
+        this.cdr.detectChanges(); 
+
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 4000);   // wait 4 seconds before redirect
+
       },
-      error: () => {
-        this.error = 'Registration failed. Please try again.';
+      error: (err) => {
+
+        this.successMessage = '';
+        this.error = err.error.message || 'Registration failed';
+
       }
     });
   }
