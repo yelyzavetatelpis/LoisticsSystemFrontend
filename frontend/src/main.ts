@@ -3,12 +3,14 @@ import { appConfig } from './app/app.config';
 import { App } from './app/app';
 import { provideRouter } from '@angular/router'; 
 import { routes } from './app/app.routes'; 
-
+import { authInterceptor } from './app/interceptors/auth.interceptor';
+import { provideHttpClient, withInterceptors  } from '@angular/common/http';
 bootstrapApplication(App, {
   ...appConfig,
   providers: [
     ...appConfig.providers,
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([authInterceptor]))
   ]
 })
   .catch((err) => console.error(err));
