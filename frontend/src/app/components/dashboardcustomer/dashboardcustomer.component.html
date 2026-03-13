@@ -1,110 +1,88 @@
 <div class="dashboard-container">
-  <!-- Page Header -->
-  <div class="page-header">
-    <h2> My Orders</h2>
-    <p class="welcome-text">Welcome back! Here's an overview of recent statistics.</p>
-  </div>
+  <!-- Header: Greeting + Date & Location -->
+  <header class="page-header">
+    <h1 class="greeting">Good {{ timeOfDay }}, {{ customerName }} 👋</h1>
+    <p class="date-location">{{ currentDate }} • {{ location }}</p>
+  </header>
 
-  <!-- KPI Cards Section - ADMIN VIEW -->
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <i class="bi bi-box-seam"></i>
-        <span class="kpi-label">Total Orders</span>
-      </div>
-      <h3 class="kpi-value">{{ kpis.totalOrders }}</h3>
-      <p class="kpi-subtitle">All time orders</p>
+  <!-- Order Summary Cards -->
+  <div class="summary-cards">
+    <div class="summary-card card-total">
+      <span class="card-label">TOTAL ORDERS</span>
+      <span class="card-value">{{ summary.totalOrders }}</span>
+      <span class="card-indicator positive">↑ {{ summary.ordersThisMonth }} this month</span>
     </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <i class="bi bi-truck"></i>
-        <span class="kpi-label">Active Shipments</span>
-      </div>
-      <h3 class="kpi-value">{{ kpis.activeShipments }}</h3>
-      <p class="kpi-subtitle">Currently in transit</p>
+    <div class="summary-card card-transit">
+      <span class="card-label">IN TRANSIT</span>
+      <span class="card-value">{{ summary.inTransit }}</span>
+      <span class="card-indicator active">Active now</span>
     </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <i class="bi bi-person-badge"></i>
-        <span class="kpi-label">Total Drivers</span>
-      </div>
-      <h3 class="kpi-value">{{ kpis.totalDrivers }}</h3>
-      <p class="kpi-subtitle">Registered drivers</p>
+    <div class="summary-card card-delivered">
+      <span class="card-label">DELIVERED</span>
+      <span class="card-value">{{ summary.delivered }}</span>
     </div>
-
-    <div class="kpi-card">
-      <div class="kpi-header">
-        <i class="bi bi-map"></i>
-        <span class="kpi-label">Active Trips</span>
-      </div>
-      <h3 class="kpi-value">{{ kpis.activeTrips }}</h3>
-      <p class="kpi-subtitle">Ongoing deliveries</p>
+    <div class="summary-card card-pending">
+      <span class="card-label">PENDING</span>
+      <span class="card-value">{{ summary.pending }}</span>
     </div>
   </div>
 
-  <!-- Recent Orders Section -->
-  <div class="section-card">
-    <div class="section-header">
-      <h3>Recent Orders</h3>
-      <button class="btn-secondary" (click)="viewAllOrders()">View All</button>
-    </div>
-    
-    <div class="table-container" *ngIf="recentOrders.length > 0">
-      <table class="data-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Status</th>
-            <th>Created Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let order of recentOrders">
-            <td>#{{ order.orderId }}</td>
-            <td>{{ order.customerName }}</td>
-            <td>
-              <span class="status-badge" [ngClass]="'status-' + order.statusName.toLowerCase()">
-                {{ order.statusName }}
-              </span>
-            </td>
-            <td>{{ order.createdAt | date:'short' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <!-- Main content: Active Orders + Track Order -->
+  <div class="main-content">
+    <!-- Active Orders Table -->
+    <section class="active-orders-section">
+      <div class="section-title-row">
+        <h2 class="section-title">ACTIVE ORDERS</h2>
+        <span class="selected-order-id" *ngIf="selectedOrder">#{{ selectedOrder.orderId }}</span>
+      </div>
+      <div class="table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>ORDER ID</th>
+              <th>DESTINATION</th>
+              <th>ITEMS</th>
+              <th>STATUS</th>
+              <th>ETA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of activeOrders"
+                [class.selected]="selectedOrder?.orderId === order.orderId"
+                (click)="selectOrder(order)">
+              <td>
+                <a class="order-id-link" (click)="goToOrderDetails(order); $event.preventDefault()">
+                  #{{ order.orderId }}
+                </a>
+              </td>
+              <td>{{ order.destination }}</td>
+              <td>{{ order.items }}</td>
+              <td>
+                <span class="status-pill" [ngClass]="'status-' + order.statusClass">
+                  {{ order.status }}
+                </span>
+              </td>
+              <td>{{ order.eta }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    <div class="empty-state" *ngIf="recentOrders.length === 0">
-      <i class="bi bi-inbox"></i>
-      <p>No recent orders found</p>
-    </div>
-  </div>
-
-  <!-- System Overview Section -->
-  <div class="section-card">
-    <div class="section-header">
-      <h3>System Overview</h3>
-    </div>
-    
-    <div class="status-grid">
-      <div class="status-item">
-        <span class="status-label">Total Customers:</span>
-        <span class="status-value">{{ kpis.totalCustomers }}</span>
+    <!-- Track Order Panel -->
+    <aside class="track-order-panel">
+      <h3 class="track-title">Track Order</h3>
+      <div class="timeline" *ngIf="selectedOrder">
+        <div class="timeline-step" *ngFor="let step of selectedOrder.trackingSteps; let i = index"
+             [class.completed]="step.completed">
+          <span class="step-icon">{{ step.completed ? '✔' : '○' }}</span>
+          <div class="step-content">
+            <span class="step-label">{{ step.label }}</span>
+            <span class="step-time" *ngIf="step.time">{{ step.time }}</span>
+          </div>
+        </div>
       </div>
-      <div class="status-item">
-        <span class="status-label">Pending Orders:</span>
-        <span class="status-value">{{ kpis.pendingOrders }}</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">Completed Shipments:</span>
-        <span class="status-value">{{ kpis.completedShipments }}</span>
-      </div>
-      <div class="status-item">
-        <span class="status-label">Available Vehicles:</span>
-        <span class="status-value">{{ kpis.availableVehicles }}</span>
-      </div>
-    </div>
+      <p class="no-order-selected" *ngIf="!selectedOrder">Select an order to track</p>
+    </aside>
   </div>
 </div>

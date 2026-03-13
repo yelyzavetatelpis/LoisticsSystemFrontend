@@ -94,5 +94,9 @@ getCurrentUserId(): number | null {
       return null;
     }
   }
+  getCurrentUser(): any {
+    const user = localStorage.getItem('currentUser');
+    return user ? JSON.parse(user) : null;
+  }
 
 }
