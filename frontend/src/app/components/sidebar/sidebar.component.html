@@ -1,49 +1,64 @@
 <div class="sidebar d-flex flex-column">
-    <div class="logo-section mb-5">
-        <h3 class="fw-bold text-white mb-0">LogiFlow</h3>
-        
-    </div>
 
-    <nav class="nav nav-pills flex-column mb-auto">
-        <p class="section-title"  *ngIf="userRole === 'Admin' || userRole === 'Dispatcher'">OVERVIEW</p>
-        <a *ngIf="userRole === 'Admin'" routerLink="/dashboard" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-grid-fill"></i> Dashboard
-        </a>
-        <a *ngIf="userRole === 'Dispatcher'" routerLink="/dashboarddispatcher" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-grid-fill"></i> Dashboard
-        </a>
+  <!-- logo -->
+  <div class="logo-section mb-5">
+    <h3 class="mb-0">LogiFlow <i class="bi bi-box-seam"></i></h3>
+  </div>
 
-        <p class="section-title" *ngIf="userRole === 'Admin' || userRole === 'Dispatcher'">MANAGEMENT</p>
-        <a *ngIf="userRole === 'Dispatcher' || userRole === 'Admin'" routerLink="/shipments" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-box-seam"></i> Shipments
-        </a>
-        <a *ngIf="userRole === 'Driver'" routerLink="/dashboarddriver" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-truck"></i> My deliveries
-        </a>
-        <a *ngIf="userRole === 'Driver'" routerLink="/driveravailability" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-clock"></i> My Availability
-        </a>
-        <a *ngIf="userRole === 'Admin'" routerLink="/vehicles" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-car-front"></i> Vehicles
-        </a>
-        <a *ngIf="userRole === 'Admin'" routerLink="/drivers" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-person-badge"></i> Drivers
-        </a>
-        <a *ngIf="userRole === 'Admin'" routerLink="/statistics" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-bar-chart"></i> Statistics
-        </a>
-        <a *ngIf="userRole === 'Customer'" routerLink="/dashboardcustomer" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-bar-chart"></i> My Dashboard
-        </a>
-        <a *ngIf="userRole === 'Customer' || userRole === 'Admin'" routerLink="/orders" routerLinkActive="active" class="nav-link">
-            <i class="bi bi-box-seam"></i> Orders
-        </a>
-    </nav>
+  <nav class="nav nav-pills flex-column mb-auto">
 
-    <div class="user-section mt-5 border-top border-secondary pt-4">
-        <a (click)="logout()" class="nav-link cursor-pointer p-0"
-            style="display: flex; align-items: center; background: transparent;">
-            <i class="bi bi-box-arrow-right"></i> Log out
-        </a>
-    </div>
+    <!-- overview section - admin and dispatcher only -->
+    <p class="section-title" *ngIf="userRole === 'Admin' || userRole === 'Dispatcher'">OVERVIEW</p>
+    <a *ngIf="userRole === 'Admin'" routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-grid-fill"></i> Dashboard
+    </a>
+    <a *ngIf="userRole === 'Dispatcher'" routerLink="/dashboarddispatcher" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-grid-fill"></i> Dashboard
+    </a>
+
+    <!-- management section -->
+    <p class="section-title" *ngIf="userRole === 'Admin' || userRole === 'Dispatcher'">MANAGEMENT</p>
+      <a *ngIf="userRole === 'Dispatcher' " routerLink="/pendingorders" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-clock"></i> Pending Orders
+    </a>
+    <a *ngIf="userRole === 'Dispatcher' || userRole === 'Admin'" routerLink="/shipments" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-box-seam"></i> Shipments
+    </a>
+    <a *ngIf="userRole === 'Driver'" routerLink="/trips" routerLinkActive="active" class="nav-link">
+<i class="bi bi-truck"></i> My Deliveries
+</a>
+<a *ngIf="userRole === 'Dispatcher' || userRole === 'Admin'" routerLink="/trips" routerLinkActive="active" class="nav-link">
+<i class="bi bi-truck"></i> Trips
+</a>
+    
+    <a *ngIf="userRole === 'Driver'" routerLink="/driveravailability" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-clock"></i> My Availability
+    </a>
+    <a *ngIf="userRole === 'Admin'" routerLink="/vehicles" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-car-front"></i> Vehicles
+    </a>
+    <a *ngIf="userRole === 'Admin'" routerLink="/drivers" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-person-badge"></i> Drivers
+    </a>
+    <a *ngIf="userRole === 'Admin'" routerLink="/statistics" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-bar-chart"></i> Statistics
+    </a>
+
+    <!-- customer links -->
+    <a *ngIf="userRole === 'Customer'" routerLink="/dashboardcustomer" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-bar-chart"></i> My Dashboard
+    </a>
+    <a *ngIf="userRole === 'Customer' || userRole === 'Admin'" routerLink="/orders" routerLinkActive="active" class="nav-link">
+      <i class="bi bi-box-seam"></i> Orders
+    </a>
+
+  </nav>
+
+  <!-- logout button -->
+  <div class="mt-5 border-top border-secondary pt-4">
+    <a (click)="logout()" class="nav-link logout cursor-pointer p-0" style="display: flex; align-items: center; background: transparent;">
+      <i class="bi bi-box-arrow-right"></i> Log out
+    </a>
+  </div>
+
 </div>
