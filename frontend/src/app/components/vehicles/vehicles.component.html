@@ -1,0 +1,64 @@
+<div class="vehicle-card">
+
+
+  <h2>Vehicles</h2>
+
+
+  <!-- Add Vehicle -->
+  <div class="add-form">
+    <input type="text" [(ngModel)]="registrationNumber" placeholder="Registration Number">
+    <input type="number" [(ngModel)]="capacity" placeholder="Capacity">
+    <input type="text" [(ngModel)]="vehicleModel" placeholder="Model">
+
+
+    <select [(ngModel)]="vehicleAvailabilityStatusId">
+      <option [value]="1">Available</option>
+      <option [value]="2">In Use</option>
+      <option [value]="3">Under Maintenance</option>
+    </select>
+
+
+    <button (click)="addVehicle()">Add Vehicle</button>
+  </div>
+
+
+  <!-- Table -->
+  <table class="vehicle-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Registration</th>
+        <th>Capacity</th>
+        <th>Model</th>
+        <th>Status</th>
+        <th>Update Availability</th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+      <tr *ngFor="let v of vehicles">
+        <td>{{v.vehicleId}}</td>
+        <td>{{v.registrationNumber}}</td>
+        <td>{{v.capacity}}</td>
+        <td>{{v.vehicleModel}}</td>
+        <td>{{ getStatusName(v.vehicleAvailabilityStatusId) }}</td>
+        <td>
+          <select [ngModel]="v.vehicleAvailabilityStatusId" (ngModelChange)="updateStatus(v, $event)">
+
+
+            <option [value]="1">Available</option>
+            <option [value]="2">In Use</option>
+            <option [value]="3">Under Maintenance</option>
+
+
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
+
+
