@@ -1,96 +1,68 @@
-/* page content */
+/* page centering */
 .container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
+  background: #b9b8b8;
 }
 
-/* outer green wrapper */
+
+/* registration box */
 .page-wrapper {
-  background: #839e88;
-  padding: 80px;
-  margin: 60px 30px 0 30px;
+  background: #eeebeb;
+  padding: 60px;
   border-radius: 16px;
-  width: 99%;
-  min-height: 85vh;
+  width: 95%;
+  min-height: 80vh;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  border: 2px solid #0c3a0e;
+  justify-content: space-around;
+  border: 1.5px solid #ddd8d8;
+  position: relative;
 }
+
 
 /* left side */
 .left-side {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
+  padding: 10px;
   flex: 1;
 }
 
-/* app title */
-h1 {
-  color: #1a1a1a;
-  font-size: 70px;
-  font-weight: 800;
-}
 
-/* box icon next to title */
-i {
-  font-size: 70px;
-  color: #1a1a1a;
-}
+h1 { color: #1a1a1a; font-size: 60px; font-weight: 800; margin: 0; line-height: 0.9; }
+h1 i { font-size: 50px; margin-left: 8px; }
 
-/* text under the title */
-.left-side p {
-  color: #302f2f;
-  font-size: 20px;
-  font-weight: 800;
-  margin-top: 20px;
-}
 
-/* login link on the left */
-.login-link a {
-  color: #0c3a0e;
-  text-decoration: underline;
-  font-weight: 600;
-  margin-left: 5px;
-}
+.left-side p { color: #302f2f; font-weight: 800; font-size: 20px; margin-top: 50px; margin-right: 30px; }
 
-/* white form card on the right */
+
+/* form card on the right */
 .card {
-  background: #fff;
-  padding: 50px;
+  background: #f8f6f6;
+  padding: 40px;
   border-radius: 16px;
   width: 100%;
   max-width: 600px;
-  border: 2px solid #0c3a0e;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  border: 1.5px solid #ddd8d8;
+  margin-left: 25px;
 }
 
-/* subtitle inside the card */
-.card p {
-  color: #555;
-  font-size: 14px;
-  text-align: center;
-  margin-bottom: 20px;
+
+h2 { color: #1a1a1a; font-size: 28px; font-weight: 700; margin: 0; display: flex; align-items: center; gap: 10px; }
+h2 i { font-size: 24px; color: #7a1212; }
+
+
+/* back button shown only to admin */
+.left-btn button {
+  position: absolute;
+  top: 40px;
+  left: 40px;
 }
 
-/* form heading */
-h2 {
-  color: #1a1a1a;
-  margin-bottom: 5px;
-  font-weight: 700;
-  text-align: center;
-}
 
-/*  submit button */
-.btn-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 25px;
-}

@@ -1,71 +1,123 @@
-<!-- page layout -->
 <div class="container">
   <div class="page-wrapper">
-
-    <!-- left side: logo and sign in link -->
-    <div class="left-side">
-      <h1>LogiFlow <i class="bi bi-box-seam"></i></h1>
-      <p>Create an account to get started!</p>
-      <p class="login-link">Already have an account? <a routerLink="/login" style="text-decoration: underline;">Sign In</a></p>
+    <!-- back button only visible to admins -->
+    <div class="left-btn" *ngIf="userRole == 'Admin'">
+      <button type="button" (click)="goBack()">← Back</button>
     </div>
 
-    <!-- right side: registration form -->
-    <div class="card">
-      <h2>Create Account</h2>
-      <p>Register to manage your shipments</p>
+    <!-- left side -->
+    <div class="left-side">
+      <div class="brand-title">
+        <h1>BLogistics <i class="bi bi-box-seam"></i></h1>
+      </div>
+      <p *ngIf="userRole !== 'Admin'" class="login-link">
+        Do you have an account? <a routerLink="/login">Sign In!</a>
+      </p>
+    </div>
 
-      <!-- ngForm to track validation state across all inputs -->
+    <!-- registration form card -->
+    <div class="card">
+      <div class="card-header">
+        <h2>{{ isEditMode ? 'Edit Account' : 'Create Account' }} <i class="bi bi-box-seam"></i></h2>
+      </div>
+
       <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
+
 
         <!-- first name -->
         <div class="input-group">
           <label>First Name</label>
-          <input type="text" [(ngModel)]="firstName" name="firstName" placeholder="Enter your first name" required #firstNameField="ngModel">
-          <span class="field-error" *ngIf="firstNameField.touched && firstNameField.invalid">First name is required</span>
+          <input type="text" [(ngModel)]="firstName" name="firstName" placeholder="Enter your first name" required
+            #firstNameField="ngModel">
+          <span class="field-error" *ngIf="firstNameField.touched && firstNameField.invalid">First name is
+            required</span>
         </div>
+
 
         <!-- last name -->
         <div class="input-group">
           <label>Last Name</label>
-          <input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Enter your last name" required #lastNameField="ngModel">
+          <input type="text" [(ngModel)]="lastName" name="lastName" placeholder="Enter your last name" required
+            #lastNameField="ngModel">
           <span class="field-error" *ngIf="lastNameField.touched && lastNameField.invalid">Last name is required</span>
         </div>
 
-        <!-- email input + Angular email validation -->
+
+        <!-- email -->
         <div class="input-group">
           <label>Email</label>
-          <input type="email" [(ngModel)]="email" name="email" placeholder="Enter your email" required email #emailField="ngModel">
+          <input type="email" [(ngModel)]="email" name="email" placeholder="Enter your email" required email
+            #emailField="ngModel">
           <span class="field-error" *ngIf="emailField.touched && emailField.invalid">Please enter a valid email</span>
         </div>
 
-        <!-- phone number input -->
+
+        <!-- phone number -->
         <div class="input-group">
           <label>Phone Number</label>
-          <input type="text" [(ngModel)]="mobileNumber" name="mobileNumber" placeholder="+359 XXX XXX XXX" required #mobileField="ngModel">
+          <input type="text" [(ngModel)]="mobileNumber" name="mobileNumber" placeholder="+359 XXX XXX XXX" required
+            #mobileField="ngModel">
           <span class="field-error" *ngIf="mobileField.touched && mobileField.invalid">Phone number is required</span>
         </div>
 
-        <!-- password input -->
+
+        <!-- password is not required in edit mode -->
         <div class="input-group">
           <label>Password</label>
-          <input type="password" [(ngModel)]="password" name="password" placeholder="Create a password" required minlength="6" pattern="(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{6,}" #passwordField="ngModel">
-  <span class="field-error" *ngIf="passwordField.touched && passwordField.invalid">Password should be at least 6 characters, have at least 1 letter and at least 1 special character</span>
-</div>
+          <input type="password" [(ngModel)]="password" name="password" placeholder="Enter password"
+            [required]="!isEditMode" minlength="6" pattern="(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{6,}"
+            #passwordField="ngModel">
+          <span class="field-error" *ngIf="passwordField.touched && passwordField.invalid && userRole !== 'Admin'">
+            Password needs 6+ chars, 1 letter, 1 special char
+          </span>
+        </div>
 
-        <!-- confirm password with match validation -->
+
+        <!-- confirm password -->
         <div class="input-group">
           <label>Confirm Password</label>
-          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Repeat your password" required #confirmField="ngModel">
-          <span class="field-error" *ngIf="confirmField.touched && confirmField.invalid">Please confirm your password</span>
-          <span class="field-error" *ngIf="confirmField.touched && password !== confirmPassword && confirmPassword !== ''">Passwords do not match</span>
+          <input type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Repeat your password"
+            required #confirmField="ngModel">
+          <span class="field-error"
+            *ngIf="confirmField.touched && password !== confirmPassword && confirmPassword !== ''">
+            Passwords do not match
+          </span>
         </div>
 
-        <div class="btn-wrapper">
-          <button type="submit">Register</button>
+
+        <!-- role selector only shown to admins -->
+        <div *ngIf="userRole === 'Admin'" class="input-group">
+          <label>Role</label>
+          <select [(ngModel)]="roleId" name="roleId" required #roleField="ngModel">
+            <option value="">Select Role</option>
+            <option [value]="1">Admin</option>
+            <option [value]="2">Dispatcher</option>
+            <option [value]="3">Driver</option>
+            <option [value]="4">Customer</option>
+          </select>
         </div>
+
+
+        <!-- license number only shown when creating a driver -->
+        <div *ngIf="userRole === 'Admin' && roleId == 3" class="input-group">
+          <label>License Number</label>
+          <input type="text" [(ngModel)]="licenseNumber" name="licenseNumber" placeholder="Enter license number"
+            required #licenseNumberField="ngModel">
+        </div>
+
+
+        <!-- show error  -->
+        <p class="error-msg" *ngIf="error">{{ error }}</p>
+
+
+        <div class="btn-wrapper">
+          <button type="submit">{{ isEditMode ? 'Update User' : 'Register' }}</button>
+        </div>
+
 
       </form>
     </div>
+
 
   </div>
 </div>

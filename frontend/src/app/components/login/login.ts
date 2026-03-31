@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -13,30 +14,35 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent {
 
-  // form fields 
+
+  // form fields
   email = '';
   password = '';
   error = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
 
-  //skip the login page if the user is logged in
+  constructor(private authService: AuthService, private router: Router) { }
+
+
+  // if user already logged in, skip the login page
   ngOnInit() {
     if (this.authService.isAuthenticated()) {
-      const redirectUrl = this.authService.redirectBasedOnRole();
-      this.router.navigate([redirectUrl]);
+      const redirect = this.authService.redirectBasedOnRole();
+      this.router.navigate([redirect]);
     }
   }
 
+
   onSubmit() {
-    // clear previous error 
+    // clear previous error before trying again
     this.error = '';
+
 
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
-        // redirect to the dashboard based on user's role
-        const redirectUrl = this.authService.redirectBasedOnRole();
-        this.router.navigate([redirectUrl]);
+        // redirect user to thier dashboard based on role
+        const redirect = this.authService.redirectBasedOnRole();
+        this.router.navigate([redirect]);
       },
       error: () => {
         this.error = 'Invalid email or password';
@@ -44,3 +50,5 @@ export class LoginComponent {
     });
   }
 }
+
+
