@@ -1,24 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { DashboardCustomerService } from '../../services/dashboardcustomer.service';
+import { CustomerDashboardService } from '../../services/customer-dashboard.service';
 
-export interface TrackingStep {
-  label: string;
-  time?: string | null;
-  completed: boolean;
-}
-
-export interface ActiveOrder {
-  orderId: string;
-  destination: string;
-  items: string;
-  status: string;
-  statusClass: string;
-  eta: string;
-  trackingSteps: TrackingStep[];
-}
 
 @Component({
   selector: 'app-dashboardcustomer',
@@ -28,82 +13,109 @@ export interface ActiveOrder {
   styleUrls: ['./dashboardcustomer.component.css']
 })
 export class DashboardCustomerComponent implements OnInit {
-  customerName = 'Maria';
-  location = 'Blagoevgrad';
-  currentDate = '';
-  timeOfDay = 'morning';
 
-  summary = {
-    totalOrders: 0,
-    ordersThisMonth: 0,
-    inTransit: 0,
-    delivered: 0,
-    pending: 0
-  };
 
-  
-  activeOrders: ActiveOrder[] = [];
-  loading=true;
-  error: string | null = null;
+  // dashboard data
+  dashboardStats: any;
+  recentOrders: any[] = [];
+  recentDeliveredOrders: any[] = [];
+  loading = false;
+  error = '';
+
+
+  // order tracking
   selectedOrder: any = null;
+  trackingSteps: any[] = [];
+
+  // greeting display
+  timeOfDay = '';
+  customerName = '';
+  currentDate = '';
 
   constructor(
-    private dashboardService: DashboardCustomerService,
-    private auth: AuthService,
-    private router: Router
+    private dashboardService: CustomerDashboardService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.setCurrentDate();
-    this.setTimeOfDay();
-    const user = this.auth.getCurrentUser();
-    if (user?.firstName) {
-      this.customerName = user.firstName;
-    }
-    const customerId = this.auth.getCurrentUserId();
-    this.loadActiveOrders(customerId);
+    // greeting based on current hour
+    const hour = new Date().getHours();
+    if (hour < 12) this.timeOfDay = 'Morning';
+    else if (hour < 17) this.timeOfDay = 'Afternoon';
+    else this.timeOfDay = 'Evening';
+
+    // get the customers first name from the auth service
+    this.authService.currentUser$.subscribe(user => {
+      this.customerName = user?.username ?? '';
+    });
+
+    this.currentDate = new Date().toDateString();
+    this.loadDashboard();
   }
-private loadActiveOrders(customerId: number | null): void {
+
+  // fetch all dashboard data from the api
+  loadDashboard(): void {
     this.loading = true;
-    this.error = null;
-debugger;
-    this.dashboardService.getActiveOrders(customerId).subscribe({
-      next: (orders) => {
-        this.activeOrders = orders.map((o) =>
-          this.dashboardService.mapOrderToActiveOrder(o)
-        );
-        this.selectedOrder = this.activeOrders.length > 0 ? this.activeOrders[0] : null;
+    this.dashboardService.getDashboardData().subscribe({
+      next: (res) => {
+        this.dashboardStats = {
+          totalOrders: res.totalOrders,
+          pendingOrders: res.pendingOrders,
+          inTransitOrders: res.inTransitOrders,
+          deliveredOrders: res.deliveredOrders
+        };
+        this.recentOrders = res.recentOrders;
+        this.recentDeliveredOrders = res.recentDeliveredOrders;
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: (err) => {
+      error: () => {
+        this.error = 'Failed to load dashboard';
         this.loading = false;
-        this.error = 'Failed to load orders.';
-        console.error('Active orders error:', err);
       }
     });
   }
-  private setCurrentDate(): void {
-    const now = new Date();
-    this.currentDate = now.toLocaleDateString('en-GB', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    });
-  }
 
-  private setTimeOfDay(): void {
-    const hour = new Date().getHours();
-    if (hour < 12) this.timeOfDay = 'morning';
-    else if (hour < 18) this.timeOfDay = 'afternoon';
-    else this.timeOfDay = 'evening';
-  }
-
+  //tracking timeline based on the orders current status
   selectOrder(order: any): void {
     this.selectedOrder = order;
-  }
+    const status = order.statusName;
 
-  goToOrderDetails(order: any): void {
-    this.router.navigate(['/orders'], { queryParams: { orderId: order.orderId } });
+    if (status === 'Cancelled') {
+      this.trackingSteps = [
+        { label: 'Order Placed', completed: true },
+        { label: 'Cancelled', completed: true }
+      ];
+    } else if (status === 'Rejected') {
+      this.trackingSteps = [
+        { label: 'Order Placed', completed: true },
+        { label: 'Rejected', completed: true }
+      ];
+    } else if (status === 'Picked Up') {
+      this.trackingSteps = [
+        { label: 'Order Placed', completed: true },
+        { label: 'Picked Up', completed: true },
+        { label: 'In Transit', completed: false },
+        { label: 'Delivered', completed: false }
+      ];
+    } else if (status === 'Delivered') {
+      this.trackingSteps = [
+        { label: 'Order Placed', completed: true },
+        { label: 'Picked Up', completed: true },
+        { label: 'In Transit', completed: true },
+        { label: 'Delivered', completed: true }
+      ];
+    } else {
+      // order placed but not yet picked up
+      this.trackingSteps = [
+        { label: 'Order Placed', completed: true },
+        { label: 'Picked Up', completed: false },
+        { label: 'In Transit', completed: false },
+        { label: 'Delivered', completed: false }
+      ];
+    }
   }
 }
+
+
