@@ -1,36 +1,44 @@
 <div class="main-layout">
 
-  <!-- sidebar -->
-  <app-sidebar></app-sidebar>
 
-  <!-- main content area -->
-  <div class="content-area">
+    <app-sidebar></app-sidebar>
 
-    <!-- top bar -->
-    <div class="top-bar">
-  <span></span>
-  <div class="user-dropdown">
-    <img
-      src="https://ui-avatars.com/api/?name={{ (currentUser$ | async)?.username }}&background=355f3b&color=fff&rounded=true"
-      alt="Avatar"
-      (click)="toggleUserDropdown()">
 
-    <div class="dropdown-menu" *ngIf="showUserDropdown">
-      <div class="dropdown-header">
-        <strong>{{ (currentUser$ | async)?.username }}</strong>
-        <small>{{ (currentUser$ | async)?.role }}</small>
-      </div>
-      <hr>
-      <button class="dropdown-item logout-btn" (click)="logout()">
-        <i class="bi bi-box-arrow-right"></i> Logout
-      </button>
+    <div class="content-area">
+
+
+        <!-- top bar with user avatar and dropdown -->
+        <div class="top-bar">
+            <div class="user-dropdown">
+
+
+                <!-- avatar generated from the users first name -->
+                <img src="https://ui-avatars.com/api/?name={{ (currentUser$ | async)?.username }}&background=7a1212&color=fff&rounded=true"
+                    alt="Avatar" (click)="toggleUserDropdown()">
+
+
+                <!-- dropdown for when avatar is clicked -->
+                <div class="dropdown-menu" *ngIf="showUserDropdown">
+                    <div class="dropdown-header">
+                        <strong>{{ (currentUser$ | async)?.username }}</strong>
+                        <small>{{ (currentUser$ | async)?.role }}</small>
+                    </div>
+                    <hr>
+                    <button class="dropdown-item" (click)="logout()">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </button>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+        <router-outlet></router-outlet>
+
+
     </div>
-  </div>
-</div>
 
-    <!-- routed page loads here -->
-    <router-outlet></router-outlet>
-
-  </div>
 
 </div>
