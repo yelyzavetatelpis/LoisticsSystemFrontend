@@ -1,3 +1,78 @@
+<div class="dashboard-container">
 
-    <h2> Dashboard Dispatcher</h2>
-    
+
+  <!-- greeting header -->
+  <header class="page-header">
+    <h1 class="greeting">Good {{ timeOfDay }}, {{ customerName }}</h1>
+    <p class="date-line">{{ currentDate }}</p>
+  </header>
+
+
+  <!-- cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="card-title">Total Orders</span>
+      <span class="card-number">{{ dashboardStats.totalOrders }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="card-title">Pending Orders</span>
+      <span class="card-number">{{ dashboardStats.pendingOrders }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="card-title">Available Drivers</span>
+      <span class="card-number">{{ dashboardStats.availableDriver }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="card-title">Available Vehicles</span>
+      <span class="card-number">{{ dashboardStats.availableVehicle }}</span>
+    </div>
+  </div>
+
+
+  <!-- todays trips section-->
+  <div class="main-content">
+    <div class="orders-table-card">
+      <h2 class="section-title">Today's Trips</h2>
+
+
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Trip ID</th>
+              <th>Driver ID</th>
+              <th>Vehicle ID</th>
+              <th>Status</th>
+              <th>Planned Departure</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let trip of trips">
+              <td>#{{ trip.tripId }}</td>
+              <td>{{ trip.driverId }}</td>
+              <td>{{ trip.vehicleId }}</td>
+              <td>
+                <span [ngClass]="{
+                  'status-pending':   trip.statusName === 'Planned',
+                  'status-transit':   trip.statusName === 'In Progress',
+                  'status-delivered': trip.statusName === 'Completed'
+                }">{{ trip.statusName }}</span>
+              </td>
+              <td>{{ trip.plannedDeparture | date:'shortTime' }}</td>
+            </tr>
+            <tr *ngIf="trips.length === 0">
+              <td colspan="5" class="empty-cell">No trips planned for today.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
+
