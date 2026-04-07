@@ -1,0 +1,63 @@
+<div class="page-wrapper">
+  <div class="toast" *ngIf="successMessage">
+    <i class="bi bi-check-circle"></i> {{ successMessage }}
+  </div>
+  <div class="page-header">
+    <h1 class="greeting"><i class="bi bi-clock"></i> Pending Orders</h1>
+  </div>
+<!-- card displaying pending orders -->
+  <div class="orders-card">
+    <h2 class="orders-title">Orders Awaiting Approval</h2>
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Pickup City</th>
+            <th>Delivery City</th>
+            <th>Weight</th>
+            <th>Pickup Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.orderId }}</td>
+            <td>{{ order.pickupCity }}</td>
+            <td>{{ order.deliveryCity }}</td>
+            <td>{{ order.packageWeight }} kg</td>
+            <td>{{ order.pickupDate | date:'mediumDate' }}</td>
+            <td><span class="status-pending">Pending</span></td>
+            <td class="action-buttons">
+              <button class="btn-accept" (click)="acceptOrder(order.orderId)">Accept</button>
+              <button class="btn-reject" (click)="openRejectModal(order.orderId)">Reject</button>
+            </td>
+          </tr>
+          <tr *ngIf="orders.length === 0">
+            <td colspan="7" class="empty-cell">No pending orders.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- rejection modal -->
+  <div class="modal-backdrop" *ngIf="showRejectModal">
+    <div class="modal-box">
+      <h3>Reject Order #{{ selectedOrderId }}</h3>
+      <p>Please provide a reason for rejection:</p>
+      <textarea [(ngModel)]="rejectionReason" rows="4" placeholder="Enter reason..."></textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel-modal" (click)="closeRejectModal()">Cancel</button>
+        <button class="btn-reject" (click)="confirmReject()">Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
