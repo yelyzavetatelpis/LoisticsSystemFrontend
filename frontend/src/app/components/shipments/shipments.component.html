@@ -1,3 +1,121 @@
+<div class="page-wrapper">
 
-    <h1>Shipments</h1>
-  
+  <div class="page-header">
+    <h1 class="greeting"><i class="bi bi-box"></i> Shipment Assignment</h1>
+  </div>
+
+  <!-- trip date filter -->
+  <div class="date-card orders-card">
+    <label>Trip Date</label>
+    <input type="date" [(ngModel)]="tripDate" (change)="loadAvailableDriversByDate()"/>
+  </div>
+
+  <!-- drivers and vehicles -->
+  <div class="content-wrap">
+    <div class="two-col">
+
+      <div class="orders-card">
+        <div class="orders-title">Available Drivers</div>
+        <div class="orders-table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>License</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let driver of (tripDate ? driversByDate : drivers)">
+                <td><input type="radio" name="driverSelect" [(ngModel)]="selectedDriverId" [value]="driver.driverId"/></td>
+                <td>{{ driver.driverId }}</td>
+                <td>{{ driver.firstName }}</td>
+                <td>{{ driver.licenseNumber }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="orders-card">
+        <div class="orders-title">Available Vehicles</div>
+        <div class="orders-table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>ID</th>
+                <th>Model</th>
+                <th>Reg. Number</th>
+                <th>Capacity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let vehicle of vehicles">
+                <td><input type="radio" name="vehicleSelect" [(ngModel)]="selectedVehicleId" [value]="vehicle.vehicleId"/></td>
+                <td>{{ vehicle.vehicleId }}</td>
+                <td>{{ vehicle.vehicleModel }}</td>
+                <td>{{ vehicle.registrationNumber }}</td>
+                <td>{{ vehicle.capacity }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- shipments table -->
+    <div class="orders-card">
+      <div class="orders-title">Shipments</div>
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Shipment ID</th>
+              <th>Order ID</th>
+              <th>Pickup City</th>
+              <th>Delivery City</th>
+              <th>Weight</th>
+              <th>Pickup Date</th>
+              <th>Status</th>
+              <th>Created Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let shipment of shipments">
+              <td><input type="checkbox" [(ngModel)]="shipment.selected"/></td>
+              <td>{{ shipment.shipmentId }}</td>
+              <td>{{ shipment.orderId }}</td>
+              <td>{{ shipment.order?.pickupCity }}</td>
+              <td>{{ shipment.order?.deliveryCity }}</td>
+              <td>{{ shipment.order?.packageWeight }}</td>
+              <td>{{ shipment.order?.pickupDate | date:'short' }}</td>
+              <td>{{ shipment.shipmentStatus?.statusName }}</td>
+              <td>{{ shipment.createdAt | date:'short' }}</td>
+            </tr>
+            <tr *ngIf="shipments.length === 0">
+              <td colspan="9" class="empty-cell">No shipments ready for assignment.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- create trip button -->
+  <div class="create-trip-bar">
+    <button (click)="createTrip()">Create Trip</button>
+  </div>
+
+  <!-- toast notification -->
+  <div class="toast" *ngIf="toastMessage" [ngClass]="toastType">
+  <i class="bi bi-check-circle" *ngIf="toastType === 'success'"></i>
+  <i class="bi bi-x-circle" *ngIf="toastType === 'error'"></i>
+  {{ toastMessage }}
+</div>
+</div>
+
+
+
