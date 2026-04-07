@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { OrderService } from '../../services/order.service';
-import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-orders',
@@ -13,58 +13,104 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
-  
-  customerId: number | null = null;
+
+
+  firstName = localStorage.getItem('firstName') || 'Customer';
+  today = new Date();
+
+
   pickupStreet = '';
   pickupCity = '';
   pickupPostalCode = '';
   deliveryStreet = '';
   deliveryCity = '';
   deliveryPostalCode = '';
-  packageWeight = '';
-  orderdescription = '';
+  packageWeight: number = 0;
+  price: number = 0;
+  orderDescription = '';
   pickupDate = '';
-  error='';
+  error = '';
   successMessage = '';
-  isSubmitted = false;
 
-  constructor(private orderService: OrderService, private router: Router, private authService: AuthService) { }
-  onSubmit(): void {
-    debugger;
-    this.isSubmitted = true;
-    if (this.orderdescription && this.pickupStreet && this.pickupCity && this.pickupPostalCode && this.deliveryStreet && this.deliveryCity && this.deliveryPostalCode && this.packageWeight && this.pickupDate) {
-      const orderData = {
-        customerId: this.customerId,
-        pickupStreet: this.pickupStreet,
-        pickupCity: this.pickupCity,
-        pickupPostalCode: this.pickupPostalCode,
-        deliveryStreet: this.deliveryStreet,
-        deliveryCity: this.deliveryCity,
-        deliveryPostalCode: this.deliveryPostalCode,
-        packageWeight: this.packageWeight,
-        orderdescription: this.orderdescription,
-        pickupDate: this.pickupDate
-      };
-      console.log('Submitting order data:', orderData);
-      this.orderService.createOrder(orderData).subscribe({
-        next: (response) => {
-          console.log('Order created successfully:', response);
-          this.successMessage = 'Order created successfully!';
-          setTimeout(() => {
-            this.router.navigate(['/orders']);
-          }, 2000);
-        },
-        error: (error) => {
-          console.error('Error creating order:', error);
-          this.error = 'Error creating order. Please try again.';
-        }
-      });
-    } else {
-      this.error = 'Please fill in all required fields.';
-}
-  }
+
+  orders: any[] = [];
+  loadingOrders = false;
+
+
+  constructor(
+    private orderService: OrderService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+
   ngOnInit(): void {
-    this.customerId = this.authService.getCurrentUserId();
-    console.log('Logged in CustomerId:', this.customerId);
+    this.loadOrders();
+  }
+
+
+  onSubmit(form: any): void {
+    this.error = '';
+
+
+    if (form.controls) {
+      Object.values(form.controls).forEach((c: any) => c.markAsTouched());
+    }
+
+
+    if (form.invalid) {
+      this.error = 'Please fill in all required fields.';
+      return;
+    }
+
+
+    const orderData = {
+      pickupStreet: this.pickupStreet,
+      pickupCity: this.pickupCity,
+      pickupPostalCode: this.pickupPostalCode,
+      deliveryStreet: this.deliveryStreet,
+      deliveryCity: this.deliveryCity,
+      deliveryPostalCode: this.deliveryPostalCode,
+      packageWeight: this.packageWeight,
+      price: this.Price,
+      orderDescription: this.orderDescription,
+      pickupDate: this.pickupDate
+    };
+
+
+    this.orderService.createOrder(orderData).subscribe({
+     next: (response: any) => {
+  const orderId = response?.orderId || response?.id || '';
+  form.resetForm();
+  this.loadOrders();
+  this.successMessage = `Order #${orderId} placed successfully!`;
+  setTimeout(() => {
+    this.successMessage = '';
+    this.cdr.detectChanges();
+  }, 3000);
+},
+    });
+  }
+
+
+  loadOrders(): void {
+    this.loadingOrders = true;
+    this.orderService.getMyOrders().subscribe({
+      next: (data) => {
+        this.orders = data;
+        this.loadingOrders = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.loadingOrders = false;
+      }
+    });
+  }
+
+
+  get Price(): number {
+    return this.packageWeight ? this.packageWeight * 5 : 0;
   }
 }
+
+
+

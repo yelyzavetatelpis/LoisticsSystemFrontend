@@ -1,86 +1,172 @@
 <div class="page-wrapper">
 
+
   <div class="page-header">
-    <h2>Place a New Order</h2>
+    <p class="greeting">{{ firstName }}, Place your order!</p>
+    <p class="date-line">{{ today | date:'EEE MMM dd yyyy' }}</p>
   </div>
 
 
-  <form #orderForm="ngForm" (ngSubmit)="onSubmit()" >
+  <!-- success message -->
+  <div class="toast" *ngIf="successMessage">
+    <i class="bi bi-check-circle"></i> {{ successMessage }}
+  </div>
+
+
+  <!-- error message -->
+  <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+
+  <form #orderForm="ngForm" (ngSubmit)="onSubmit(orderForm)">
     <div class="form-card">
-      <!-- Pickup Section -->
+
+
       <div class="form-section">
         <h3>Pickup Details</h3>
-
         <div class="form-grid">
           <div class="form-group">
             <label>Pickup Street</label>
-            <input type="text" placeholder="Enter pickup street" [(ngModel)]="pickupStreet" name="pickupStreet" required>
+            <input type="text" placeholder="Enter pickup street" [(ngModel)]="pickupStreet" name="pickupStreet" required
+              #pickupStreetF="ngModel">
+            <span class="field-error" *ngIf="pickupStreetF.touched && pickupStreetF.invalid">Pickup street is
+              required</span>
           </div>
-
           <div class="form-group">
             <label>Pickup City</label>
-            <input type="text" placeholder="Enter pickup city" [(ngModel)]="pickupCity" name="pickupCity" required>
+            <input type="text" placeholder="Enter pickup city" [(ngModel)]="pickupCity" name="pickupCity" required
+              #pickupCityF="ngModel">
+            <span class="field-error" *ngIf="pickupCityF.touched && pickupCityF.invalid">Pickup city is required</span>
           </div>
-
           <div class="form-group">
             <label>Pickup Postal Code</label>
-            <input type="text" placeholder="Enter postal code" [(ngModel)]="pickupPostalCode" name="pickupPostalCode" required>
+            <input type="text" placeholder="Enter postal code" [(ngModel)]="pickupPostalCode" name="pickupPostalCode"
+              required #pickupPostalF="ngModel">
+            <span class="field-error" *ngIf="pickupPostalF.touched && pickupPostalF.invalid">Postal code is
+              required</span>
           </div>
-
           <div class="form-group">
             <label>Preferred Pickup Date</label>
-            <input type="date" [(ngModel)]="pickupDate" name="pickupDate" required>
+            <input type="date" [(ngModel)]="pickupDate" name="pickupDate" required #pickupDateF="ngModel">
+            <span class="field-error" *ngIf="pickupDateF.touched && pickupDateF.invalid">Pickup date is required</span>
           </div>
         </div>
       </div>
 
-      <!-- Delivery Section -->
+
       <div class="form-section">
         <h3>Delivery Details</h3>
-
         <div class="form-grid">
           <div class="form-group">
             <label>Delivery Street</label>
-            <input type="text" placeholder="Enter delivery street" [(ngModel)]="deliveryStreet" name="deliveryStreet" required>
+            <input type="text" placeholder="Enter delivery street" [(ngModel)]="deliveryStreet" name="deliveryStreet"
+              required #deliveryStreetF="ngModel">
+            <span class="field-error" *ngIf="deliveryStreetF.touched && deliveryStreetF.invalid">Delivery street is
+              required</span>
           </div>
-
           <div class="form-group">
             <label>Delivery City</label>
-            <input type="text" placeholder="Enter delivery city" [(ngModel)]="deliveryCity" name="deliveryCity" required>
+            <input type="text" placeholder="Enter delivery city" [(ngModel)]="deliveryCity" name="deliveryCity" required
+              #deliveryCityF="ngModel">
+            <span class="field-error" *ngIf="deliveryCityF.touched && deliveryCityF.invalid">Delivery city is
+              required</span>
           </div>
-
           <div class="form-group">
             <label>Delivery Postal Code</label>
-            <input type="text" placeholder="Enter postal code" [(ngModel)]="deliveryPostalCode" name="deliveryPostalCode" required>
+            <input type="text" placeholder="Enter postal code" [(ngModel)]="deliveryPostalCode"
+              name="deliveryPostalCode" required #deliveryPostalF="ngModel">
+            <span class="field-error" *ngIf="deliveryPostalF.touched && deliveryPostalF.invalid">Postal code is
+              required</span>
           </div>
         </div>
       </div>
 
-      <!-- Package Section -->
+
       <div class="form-section">
         <h3>Order Information</h3>
-
         <div class="form-grid">
           <div class="form-group">
             <label>Order Weight (kg)</label>
-            <input type="number" placeholder="Enter weight" [(ngModel)]="packageWeight" name="packageWeight" required>
+            <input type="number" placeholder="Enter weight" [(ngModel)]="packageWeight" name="packageWeight" required
+              min="0.1" #weightF="ngModel">
+            <span class="field-error" *ngIf="weightF.touched && weightF.invalid">Valid weight is required</span>
           </div>
-
+          <div class="form-group">
+            <label>Order Price</label>
+            <p *ngIf="packageWeight">
+              {{ (+packageWeight) * 5 | currency:'USD' }}
+            </p>
+            <p *ngIf="!packageWeight">
+              5$ per kilogram
+            </p>
+          </div>
           <div class="form-group full-width">
             <label>Order Description</label>
-            <textarea rows="3" placeholder="Enter description" [(ngModel)]="orderdescription" name="orderdescription"></textarea>
+            <textarea rows="3" placeholder="Enter description" [(ngModel)]="orderDescription"
+              name="orderDescription"></textarea>
           </div>
         </div>
       </div>
 
 
-
-      <!-- Buttons -->
       <div class="button-group">
-        <button class="btn-secondary" >Cancel</button>
-        <button type="submit" class="btn-primary">Create Order</button>
+        <button type="button" class="btn-secondary" (click)="orderForm.resetForm()">Cancel</button>
+        <button type="submit">Create Order</button>
       </div>
+
+
     </div>
   </form>
-</div>
 
+
+  <div class="orders-card">
+    <h2 class="orders-title">My Orders</h2>
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Pickup Street</th>
+            <th>Pickup City</th>
+            <th>Pickup Postal Code</th>
+            <th>Delivery Street</th>
+            <th>Delivery City</th>
+            <th>Delivery Postal Code</th>
+            <th>Weight (kg)</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Additional Notes</th>
+            <th>Pickup Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.orderId }}</td>
+            <td>{{ order.pickupStreet }}</td>
+            <td>{{ order.pickupCity }}</td>
+            <td>{{ order.pickupPostalCode }}</td>
+            <td>{{ order.deliveryStreet }}</td>
+            <td>{{ order.deliveryCity }}</td>
+            <td>{{ order.deliveryPostalCode }}</td>
+            <td>{{ order.packageWeight }} kg</td>
+            <td>{{ order.orderDescription || '—' }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'status-pending': order.statusName === 'Pending',
+                'status-transit': order.statusName === 'In Transit',
+                'status-delivered': order.statusName === 'Delivered',
+                'status-cancelled': order.statusName === 'Cancelled'
+              }">{{ order.statusName }}</span>
+            </td>
+            <td>{{ order.additionalNotes || 'N/A' }}</td>
+            <td>{{ order.pickupDate | date:'mediumDate' }}</td>
+          </tr>
+          <tr *ngIf="orders.length === 0 && !loadingOrders">
+            <td colspan="12" class="empty-cell">No orders placed yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+</div>
