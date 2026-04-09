@@ -1,0 +1,50 @@
+<div class="page-wrapper">
+
+
+  <div class="page-header">
+    <h1 class="greeting">Drivers</h1>
+  </div>
+
+
+  <p class="loading-msg" *ngIf="loading">Loading drivers...</p>
+
+
+  <div class="content-wrap">
+    <div class="orders-card">
+      <h2 class="orders-title">All Drivers</h2>
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>License Number</th>
+              <th>Availability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let driver of drivers">
+              <td>{{ driver.firstName }} {{ driver.lastName }}</td>
+              <td>{{ driver.email }}</td>
+              <td>{{ driver.licenseNumber }}</td>
+              <td>
+                <span [ngClass]="{
+                  'status-delivered': driver.availabilityStatus === 'Available',
+                  'status-transit':   driver.availabilityStatus === 'Not Available'
+                }">{{ driver.availabilityStatus }}</span>
+              </td>
+            </tr>
+            <tr *ngIf="drivers.length === 0 && !loading">
+              <td colspan="4" class="empty-cell">No drivers found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
