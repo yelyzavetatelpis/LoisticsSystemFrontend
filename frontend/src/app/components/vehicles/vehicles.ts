@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { VehicleService } from '../../services/vehicles.service';
-import { ChangeDetectorRef } from '@angular/core';
+import { VehicleService } from '../../services/vehicle.service';
 
 
 @Component({
@@ -18,13 +17,21 @@ export class VehiclesComponent implements OnInit {
   vehicles: any[] = [];
 
 
+  // form fields for adding a new vehicle
   registrationNumber = '';
   capacity: number | null = null;
   vehicleModel = '';
   vehicleAvailabilityStatusId = 1;
 
 
-  constructor(private vehicleService: VehicleService, private cdr: ChangeDetectorRef) {}
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
+
+
+  constructor(
+    private vehicleService: VehicleService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
 
   ngOnInit(): void {
@@ -32,21 +39,27 @@ export class VehiclesComponent implements OnInit {
   }
 
 
-  loadVehicles() {
-    debugger;
+  showToast(message: string, type: 'success' | 'error' = 'success'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    setTimeout(() => { this.toastMessage = ''; }, 4000);
+  }
+
+
+  // fetch all vehicles from the api
+  loadVehicles(): void {
     this.vehicleService.getVehicles().subscribe({
       next: (res: any) => {
         this.vehicles = res;
         this.cdr.detectChanges();
       },
-      error: (err) => {
-        console.error('Error loading vehicles', err);
-      }
+      error: (err) => console.error('Error loading vehicles', err)
     });
   }
 
 
-  addVehicle() {
+  // submit a new vehicle and reset the form
+  addVehicle(): void {
     const data = {
       registrationNumber: this.registrationNumber,
       capacity: this.capacity,
@@ -57,25 +70,20 @@ export class VehiclesComponent implements OnInit {
 
     this.vehicleService.addVehicle(data).subscribe({
       next: () => {
-        alert('Vehicle added successfully');
-        this.loadVehicles();
-       
-
-
-        // reset form
+        this.showToast('Vehicle added successfully');
         this.registrationNumber = '';
         this.capacity = null;
         this.vehicleModel = '';
         this.vehicleAvailabilityStatusId = 1;
-         this.cdr.detectChanges();
+        this.loadVehicles();
+        this.cdr.detectChanges();
       },
-      error: (err) => {
-        alert(err?.error || 'Failed to add vehicle');
-      }
+      error: (err) => this.showToast(err?.error || 'Failed to add vehicle', 'error')
     });
   }
 
 
+ 
   getStatusName(statusId: number): string {
     switch (statusId) {
       case 1: return 'Available';
@@ -86,23 +94,20 @@ export class VehiclesComponent implements OnInit {
   }
 
 
-  updateStatus(vehicle: any, newStatusId: number) {
+  // update a vehicles availability status
+  updateStatus(vehicle: any, newStatusId: number): void {
+    if (vehicle.vehicleAvailabilityStatusId === newStatusId) return;
 
 
-  if (vehicle.vehicleAvailabilityStatusId === newStatusId) return;
-
-
-  this.vehicleService.updateVehicleStatus(vehicle.vehicleId, newStatusId)
-    .subscribe({
+    this.vehicleService.updateVehicleStatus(vehicle.vehicleId, newStatusId).subscribe({
       next: () => {
-        alert('Status updated successfully');
-        this.loadVehicles(); // refresh
+        this.showToast('Status updated successfully');
+        this.loadVehicles();
       },
-      error: (err) => {
-        alert(err?.error || 'Failed to update status');
-      }
+      error: (err) => this.showToast(err?.error || 'Failed to update status', 'error')
     });
+  }
 }
-}
+
 
 

@@ -1,0 +1,17 @@
+.add-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+
+.add-form input, .add-form select {
+  width: auto;
+  flex: 1;
+  min-width: 140px;
+}
+
+
+
