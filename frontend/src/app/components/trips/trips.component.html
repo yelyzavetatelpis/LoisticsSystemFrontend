@@ -1,1 +1,146 @@
- <h1>Trips</h1>
+<div class="page-wrapper">
+
+
+  <div class="page-header">
+    <h1 class="greeting" *ngIf="userRole === 'Driver'" >Good {{ timeOfDay }}, {{ driverName }}!</h1>
+    <h1 class="greeting" *ngIf="userRole !== 'Driver'">
+  <i class="bi bi-truck"></i> Trips Management
+</h1>
+    <p class="date-line" *ngIf="userRole === 'Driver'">{{ currentDate }}</p>
+  </div>
+
+
+  <!-- trips table -->
+
+
+    <div class="orders-card">
+      <h2 class="orders-title">Trips</h2>
+      <div class="orders-table-wrapper">
+        <table class="orders-table">
+          <thead>
+            <tr>
+              <th>Trip ID</th>
+              <th>Driver ID</th>
+              <th>Vehicle</th>
+              <th>Status</th>
+              <th>Departure</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let trip of trips">
+              <td>{{ trip.tripId }}</td>
+              <td>{{ trip.driverId }}</td>
+              <td>{{ trip.vehicleId }}</td>
+              <td>
+                <span [ngClass]="{
+                  'status-pending':   trip.statusName === 'Planned',
+                  'status-transit':   trip.statusName === 'In Progress',
+                  'status-delivered': trip.statusName === 'Completed'
+                }">{{ trip.statusName }}</span>
+              </td>
+              <td>{{ trip.plannedDeparture | date:'short' }}</td>
+              <td>
+                <button *ngIf="userRole !== 'Driver'" (click)="viewTrip(trip.tripId)">
+                  View Shipments
+                </button>
+                <button *ngIf="userRole === 'Driver'" class="btn-start-trip"
+                  (click)="startTrip(trip.tripId)"
+                  [disabled]="startTripLoading || trip.statusName === 'Completed'">
+                  {{ startTripLoading ? 'Starting...' : 'Start Trip' }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="trips.length === 0">
+              <td colspan="6" class="empty-cell">No trips found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+ 
+
+
+  <!-- shipments modal -->
+  <div class="modal-backdrop" *ngIf="selectedTripId" (click)="closeTripModal()"></div>
+  <div class="modal-dialog" *ngIf="selectedTripId">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+
+
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <h3 class="modal-title">Trip #{{ selectedTripId }} Shipments</h3>
+          <span [ngClass]="{
+            'status-pending':   selectedTrip?.statusName === 'Planned',
+            'status-transit':   selectedTrip?.statusName === 'In Progress',
+            'status-delivered': selectedTrip?.statusName === 'Completed'
+          }">{{ selectedTrip?.statusName || '—' }}</span>
+        </div>
+        <button class="modal-close" (click)="closeTripModal()">&times;</button>
+      </div>
+
+
+      <p class="error-msg" *ngIf="startTripError">{{ startTripError }}</p>
+
+
+      <div class="modal-body">
+        <div class="orders-table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Shipment ID</th>
+                <th>Order ID</th>
+                <th>Pickup City</th>
+                <th>Delivery City</th>
+                <th>Weight</th>
+                <th>Status</th>
+                <th *ngIf="userRole === 'Driver'">Update Status</th>
+                <th>Created Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of tripShipments; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ s.shipmentId }}</td>
+                <td>{{ s.orderId }}</td>
+                <td>{{ s.pickupCity }}</td>
+                <td>{{ s.deliveryCity }}</td>
+                <td>{{ s.packageWeight }}</td>
+                <td>
+                  <span [ngClass]="{
+                    'status-pending':   s.statusName === 'Pending',
+                    'status-transit':   s.statusName === 'Picked Up',
+                    'status-delivered': s.statusName === 'Delivered',
+                    'status-cancelled': s.statusName === 'Failed'
+                  }">{{ s.statusName || '—' }}</span>
+                </td>
+                <td *ngIf="userRole === 'Driver'">
+                  <select [ngModel]="s.statusName"
+                    (ngModelChange)="updateShipmentStatus(s, $event)"
+                    [disabled]="updatingShipmentId === s.shipmentId">
+                    <option *ngFor="let opt of shipmentStatusOptions" [value]="opt.value">{{ opt.label }}</option>
+                  </select>
+                  <span *ngIf="updatingShipmentId === s.shipmentId" class="updating-text">Updating...</span>
+                </td>
+                <td>{{ s.createdAt | date:'short' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+
+      <div class="modal-footer">
+        <button (click)="closeTripModal()">Close</button>
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
+
+
+

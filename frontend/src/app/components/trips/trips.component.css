@@ -1,118 +1,120 @@
-/* font style for entire page */
-* {
-  font-family: Arial, sans-serif;
+/* content wrapper */
+.content-wrap {
+  background: #b7b4b4;
+  border-radius: 6px;
+  border: 2px solid #ddd8d8;
+  box-shadow: 0 4px 16px rgba(122, 18, 18, 0.06);
+   border: 0.5px solid #5f5f5f;
+  padding: 20px;
+  margin-top: 20px;
 }
 
 
-/* full-page layout */
-.container {
-  min-height: 100vh;
+/* start trip button for drivers */
+.btn-start-trip {
+  padding: 6px 12px;
+  background: #7a1212;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+.btn-start-trip:hover:not(:disabled) { background: #a83232; }
+.btn-start-trip:disabled { opacity: 0.6; cursor: not-allowed; }
+
+
+/* modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+
+.modal-dialog {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1001;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  padding: 16px;
 }
 
-/* form container */
-.card {
-  background: white;
-  padding: 45px;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 100%;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-}
 
-    /* form title */
-h1 {
-  font-size: 30px;
-  text-align: center;
-  color: #333;
-  font-weight: 700; 
-  font-family: inherit; 
-}
-
-/* subtext below title */
-p {
-  text-align: center;
-  color: #666;
-  margin-bottom: 35px;
-}
-
-/* input wrapper spacing */
-.input-group {
-  margin-bottom: 18px;
-}
-
-/* input labels */
-label {
-  display: block;
-  margin-bottom: 6px;
-  color: #333;
-  font-weight: 600;
-}
-
-/* input fields */
-input {
-  width: 100%;
-  padding: 13px;
-  border: 2px solid #ddd;
+.modal-content {
+  background: #fff;
   border-radius: 6px;
-  font-family: inherit; 
-  font-size: 15px;
-  background: #fafafa;
-  box-sizing: border-box;
+  border: 1.5px solid #ddd8d8;
+  max-width: 1100px;
+  width: 100%;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* submit button */
-button {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+
+.status-pending,
+.status-transit,
+.status-delivered,
+.status-cancelled {
+  white-space: nowrap;
+}
+
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: #f5eeee;
+  border-bottom: 1px solid #ddd8d8;
+  border-radius: 6px 6px 0 0;
+}
+
+
+.modal-title-wrap { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.modal-title { margin: 0; font-size: 20px; color: #1a1a1a; }
+
+
+.modal-close {
+  background: none;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 24px;
   cursor: pointer;
-  margin-top: 8px;
+  color: #6b6b6b;
+  padding: 4px;
 }
 
-/* button hover effect */
-button:hover {
-  opacity: 0.95;
+
+.modal-close:hover { color: #7a1212; background: none; }
+
+
+.modal-body { padding: 20px; overflow-y: auto; }
+
+
+.modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #ddd8d8;
+  display: flex;
+  justify-content: flex-end;
 }
 
-/* disabled state */
-button:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
 
-/* footer below the form */
-.footer {
-  text-align: center;
-  margin-top: 25px;
-  padding-top: 25px;
-  color: #666;
-}
-
-/* link styles */
-a {
-  color: #667eea;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-/* inline error messages under inputs */
-.field-error {
-  display: block;
-  color: #d63031;
+/* shipment status dropdown */
+.updating-text {
+  display: inline-block;
+  margin-left: 8px;
   font-size: 13px;
-  margin-top: 5px;
+  color: #6b6b6b;
 }
+
+
+select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+
+
