@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import Chart from 'chart.js/auto';
+import { DashboardService } from '../../services/dashboard.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -9,32 +15,204 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  
-  // Dashboard statistics TEST data
-  kpis = {
-    totalOrders: 156,
-    activeShipments: 23,
-    totalDrivers: 12,
-    activeTrips: 8,
-    totalCustomers: 45,
-    pendingOrders: 15,
-    completedShipments: 133,
-    availableVehicles: 7
-  };
+  data: any;
+  timeOfDay = '';
+  adminName = '';
+  currentDate = '';
+  metrics: any[] = [];
 
-  // Recent orders TEST data
-  recentOrders = [
-    { orderId: 1001, customerName: 'John Smith', statusName: 'Processing', createdAt: new Date('2024-02-10') },
-    { orderId: 1002, customerName: 'Maria Garcia', statusName: 'Shipped', createdAt: new Date('2024-02-11') },
-    { orderId: 1003, customerName: 'Peter Johnson', statusName: 'Pending', createdAt: new Date('2024-02-12') },
-    { orderId: 1004, customerName: 'Anna Williams', statusName: 'Delivered', createdAt: new Date('2024-02-13') }
-  ];
+
+  constructor(
+    private authService: AuthService,
+    private dashboardService: DashboardService,
+    private cdr: ChangeDetectorRef
+  ) { }
+
 
   ngOnInit(): void {
-    
+
+    const hour = new Date().getHours();
+    if (hour < 12) this.timeOfDay = 'Morning';
+    else if (hour < 17) this.timeOfDay = 'Afternoon';
+    else this.timeOfDay = 'Evening';
+
+
+    this.authService.currentUser$.subscribe(user => {
+      this.adminName = user?.username ?? '';
+    });
+
+
+    this.currentDate = new Date().toDateString();
+
+
+    this.dashboardService.getDashboardMetrics().subscribe(res => {
+      this.data = res;
+
+
+      this.metrics = [
+        { category: 'Financial', metric: 'Total Revenue', value: res.financial?.totalRevenue ?? 0 },
+        { category: 'Financial', metric: 'Revenue This Month', value: res.financial?.revenueThisMonth ?? 0 },
+        { category: 'Financial', metric: 'Revenue This Week', value: res.financial?.revenueThisWeek ?? 0 },
+        { category: 'Financial', metric: 'Average Order Value', value: res.financial?.averageOrderValue ?? 0 },
+
+
+        { category: 'Orders', metric: 'Total Orders', value: res.orders?.totalOrders ?? 0 },
+        { category: 'Orders', metric: 'Orders This Month', value: res.orders?.ordersThisMonth ?? 0 },
+        { category: 'Orders', metric: 'Orders This Week', value: res.orders?.ordersThisWeek ?? 0 },
+
+
+        { category: 'Users', metric: 'Total Customers', value: res.users?.totalCustomers ?? 0 },
+        { category: 'Users', metric: 'Total Drivers', value: res.users?.totalDrivers ?? 0 },
+        { category: 'Users', metric: 'Total Dispatchers', value: res.users?.totalDispatchers ?? 0 },
+
+
+        { category: 'Operations', metric: 'Total Shipments', value: res.operations?.totalShipments ?? 0 },
+        { category: 'Operations', metric: 'Total Trips', value: res.operations?.totalTrips ?? 0 },
+        { category: 'Operations', metric: 'Active Trips', value: res.operations?.activeTrips ?? 0 },
+        { category: 'Operations', metric: 'Completed Trips', value: res.operations?.completedTrips ?? 0 }
+      ];
+
+      this.cdr.detectChanges();
+      setTimeout(() => this.loadCharts(), 0);
+    });
   }
 
-  viewAllOrders(): void {
-    console.log('View all orders clicked');
+
+  // --- Charts ---
+
+
+  loadCharts() {
+    this.createPieChart();
+    this.createBarChart();
+    this.createLineChart();
   }
+
+
+  createPieChart() {
+    const ctx = document.getElementById('ordersPieChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+
+    Chart.getChart(ctx)?.destroy();
+
+
+    const status = this.data.orders?.adminOrdersByStatus;
+
+
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Pending', 'In Progress', 'Delivered', 'Cancelled/Rejected'],
+        datasets: [{
+          data: [
+            status?.pending ?? 0,
+            status?.inTransit ?? 0,
+            status?.delivered ?? 0,
+            status?.cancelled ?? 0
+          ],
+          backgroundColor: ['#f39c12', '#3498db', '#2ecc71', '#e74c3c']
+        }]
+      }
+    });
+  }
+
+
+  createBarChart() {
+    const ctx = document.getElementById('revenueBarChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+
+    Chart.getChart(ctx)?.destroy();
+
+
+    const weekly = this.data.financial?.weeklyRevenue ?? [0, 0, 0, 0];
+
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Revenue',
+          data: weekly,
+          backgroundColor: '#e74c3c'
+        }]
+      }
+    });
+  }
+
+
+  createLineChart() {
+    const ctx = document.getElementById('ordersLineChart') as HTMLCanvasElement;
+    if (!ctx) return;
+
+
+    Chart.getChart(ctx)?.destroy();
+
+
+    const growth = this.data.orders?.orderGrowth ?? [0, 0, 0, 0];
+
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+        datasets: [{
+          label: 'Orders Placed',
+          data: growth,
+          borderColor: '#2ecc71',
+          fill: false
+        }]
+      }
+    });
+  }
+
+
+  exportPdf() {
+  const pdf = new jsPDF('l', 'mm', 'a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+
+
+  pdf.setFontSize(16);
+  pdf.text('Blogistics Dashboard Report', 14, 10);
+
+
+  pdf.setFontSize(10);
+  pdf.text(`Generated by: ${this.adminName}`, 14, 16);
+  pdf.text(`Date: ${this.currentDate}`, pageWidth - 60, 16);
+
+  const startY = 25;
+
+  const body = this.metrics.map(m => [
+    m.category,
+    m.metric,
+    m.value?.toLocaleString()
+  ]);
+
+  autoTable(pdf, {
+    head: [['Category', 'Metric', 'Value']],
+    body: body,
+    startY: startY,
+    theme: 'grid',
+    styles: { fontSize: 10 },
+
+
+    headStyles: {
+      fillColor: [41, 128, 185] 
+    },
+
+
+    didDrawPage: () => {
+      const pageCount = pdf.getNumberOfPages();
+
+      pdf.setFontSize(10);
+      pdf.text(`Page ${pageCount}`, pageWidth - 30, 200);
+    }
+  });
+
+  pdf.save('Blogistics-kpis.pdf');
 }
+}
+
+
+
