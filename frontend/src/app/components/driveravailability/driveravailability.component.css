@@ -1,5 +1,5 @@
 .section-heading {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   margin-bottom: 6px;
   color: #1a1a1a;
@@ -13,59 +13,10 @@
 }
 
 
-.form-section {
-  margin-bottom: 28px;
-}
+.form-section { margin-bottom: 28px; }
 
 
-.availability-toggle {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-
-.toggle-option {
-  cursor: pointer;
-  margin: 0;
-}
-
-
-.toggle-option input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-.toggle-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: 1.5px solid #ccc;
-  font-size: 14px;
-  font-weight: 500;
-  transition: 0.2s;
-  cursor: pointer;
-}
-
-
-.toggle-option input:checked + .toggle-label.available {
-  border-color: #0c3a0e;
-  background: #f0f7f0;
-  color: #0c3a0e;
-}
-
-
-.toggle-option input:checked + .toggle-label.unavailable {
-  border-color: #c62828;
-  background: #fee2e2;
-  color: #c62828;
-}
-
-
+/* day checkboxes */
 .days-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -79,52 +30,54 @@
   gap: 8px;
   cursor: pointer;
   padding: 10px 12px;
-  border-radius: 8px;
-  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  border: 1.5px solid #ddd8d8;
   font-size: 14px;
   transition: 0.2s;
 }
 
 
 .day-checkbox:hover {
-  border-color: #0c3a0e;
-  background: #f0f7f0;
+  border-color: #7a1212;
+  background: #f5eeee;
 }
 
 
 .day-checkbox input {
   width: 16px;
   height: 16px;
-  accent-color: #0c3a0e;
+  accent-color: #7a1212;
 }
 
 
-.day-label {
-  font-weight: 500;
-  color: #1a1a1a;
-}
+.day-label { font-weight: 500; color: #1a1a1a; }
 
 
+/* save button */
 .form-actions {
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #ddd8d8;
+}
+
+
+/* success message */
+.toast {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: #d1e7dd;
+  color: #0f5132;
+  border: 1.5px solid #0f5132;
+  border-radius: 6px;
+  padding: 16px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  z-index: 9999;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
-
-.success-msg {
-  font-size: 14px;
-  color: #0c3a0e;
-  margin: 0;
-}
-.main-content-wrap {
-  background: #839e88;
-  border-radius: 16px;
-  padding: 20px;
-  margin-top: 20px;
-}
 
 

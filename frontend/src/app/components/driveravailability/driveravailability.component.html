@@ -1,8 +1,8 @@
- <h1>Availability</h1><div class="page-wrapper">
+<div class="page-wrapper">
 
 
   <div class="page-header">
-    <h2>My Availability</h2>
+    <h1 class="greeting">My Availability</h1>
   </div>
 
 
@@ -11,13 +11,14 @@
 
 
   <form (ngSubmit)="saveAvailability()" #availabilityForm="ngForm" *ngIf="!loading">
-    <div class="main-content-wrap">
+   
       <div class="orders-card">
 
 
+        <!-- weekly day selection -->
         <div class="form-section">
-          <h3 class="section-heading">Available Days (Weekly)</h3>
-          <p class="section-desc">Select which days of the week you are typically available.</p>
+          <h3 class="section-heading">Available Days</h3>
+          <p class="section-desc">Select which days of the week you are available.</p>
           <div class="days-grid">
             <label *ngFor="let day of dayKeys" class="day-checkbox">
               <input
@@ -33,18 +34,25 @@
 
 
         <div class="form-actions">
-          <button type="submit" [disabled]="saving">
+          <button type="button" (click)="saveAvailability()" [disabled]="saving">
             {{ saving ? 'Saving...' : 'Save Availability' }}
           </button>
-          <p class="success-msg" *ngIf="saveMessage">{{ saveMessage }}</p>
         </div>
 
 
       </div>
-    </div>
+ 
   </form>
 
 
+  <!-- success message -->
+  <div class="toast" *ngIf="saveMessage">
+    <i class="bi bi-check-circle"></i>
+    {{ saveMessage }}
+  </div>
+
+
 </div>
+
 
 

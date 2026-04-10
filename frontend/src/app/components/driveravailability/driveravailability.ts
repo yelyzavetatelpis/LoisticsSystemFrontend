@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -21,13 +21,8 @@ export class DriverAvailabilityComponent implements OnInit {
 
   isAvailable = true;
   availableDays: Record<DayKey, boolean> = {
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false
+    monday: false, tuesday: false, wednesday: false,
+    thursday: false, friday: false, saturday: false, sunday: false
   };
   dayKeys = DAY_KEYS;
   saving = false;
@@ -49,13 +44,13 @@ export class DriverAvailabilityComponent implements OnInit {
 
   private mapResponseToDays(availableDays?: DriverAvailabilityDays): Record<DayKey, boolean> {
     return {
-      monday: availableDays?.monday ?? false,
-      tuesday: availableDays?.tuesday ?? false,
+      monday:    availableDays?.monday    ?? false,
+      tuesday:   availableDays?.tuesday   ?? false,
       wednesday: availableDays?.wednesday ?? false,
-      thursday: availableDays?.thursday ?? false,
-      friday: availableDays?.friday ?? false,
-      saturday: availableDays?.saturday ?? false,
-      sunday: availableDays?.sunday ?? false
+      thursday:  availableDays?.thursday  ?? false,
+      friday:    availableDays?.friday    ?? false,
+      saturday:  availableDays?.saturday  ?? false,
+      sunday:    availableDays?.sunday    ?? false
     };
   }
 
@@ -65,9 +60,12 @@ export class DriverAvailabilityComponent implements OnInit {
   }
 
 
+  // get the drivers curent availability from api
   loadAvailability(): void {
     this.loading = true;
     this.loadError = '';
+
+
     this.driverAvailabilityService.getMyAvailability().subscribe({
       next: (res) => {
         this.isAvailable = res.isAvailable;
@@ -83,29 +81,37 @@ export class DriverAvailabilityComponent implements OnInit {
   }
 
 
+  // save the weekly availability
   saveAvailability(): void {
     this.saving = true;
     this.saveMessage = '';
     this.loadError = '';
+
+
     const payload = {
-  isAvailable: true,
-  availableDays: this.availableDays,
-  specificDates: [] as string[]
-};
+      isAvailable: this.isAvailable,
+      availableDays: this.availableDays
+    };
 
 
     this.driverAvailabilityService.saveMyAvailability(payload).subscribe({
       next: () => {
         this.saving = false;
-        this.saveMessage = 'Availability saved successfully.';
-        setTimeout(() => (this.saveMessage = ''), 3000);
+        this.saveMessage = 'Availability saved!';
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.saveMessage = '';
+          this.cdr.detectChanges();
+        }, 3000);
       },
       error: (err) => {
         this.saving = false;
         this.loadError = err?.error?.message || 'Failed to save availability.';
+        this.cdr.detectChanges();
       }
     });
   }
 }
+
 
 
