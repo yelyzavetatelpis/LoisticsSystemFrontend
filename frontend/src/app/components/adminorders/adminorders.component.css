@@ -1,0 +1,39 @@
+:host {
+  display: block;
+  overflow-x: hidden;
+}
+
+
+.page-wrapper {
+  overflow-x: hidden;
+}
+
+
+.orders-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+
+.orders-table-wrapper {
+  overflow-x: auto;
+  display: block;
+  width: 100%;
+}
+
+
+.filter-section {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+
+.filter-section input {
+  width: auto;
+  min-width: 140px;
+}
+
+
+

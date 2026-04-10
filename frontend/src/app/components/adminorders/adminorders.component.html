@@ -1,0 +1,76 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <h2>All Orders</h2>
+  </div>
+
+
+  <div class="orders-card">
+    <h2 class="orders-title">Orders</h2>
+
+
+    <div class="filter-section">
+      <input type="text" placeholder="Search by Email" [(ngModel)]="filterEmail">
+      <input type="date" [(ngModel)]="fromDate">
+      <input type="date" [(ngModel)]="toDate">
+      <button (click)="applyFilter()">Filter</button>
+      <button (click)="resetFilter()">Reset</button>
+    </div>
+
+
+    <div class="orders-table-wrapper">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Email</th>
+            <th>Pickup Street</th>
+            <th>Pickup City</th>
+            <th>Pickup Postal Code</th>
+            <th>Delivery Street</th>
+            <th>Delivery City</th>
+            <th>Delivery Postal Code</th>
+            <th>Weight (kg)</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Creation Date</th>
+            <th>Additional Notes</th>
+            <th>Pickup Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>#{{ order.orderId }}</td>
+            <td>{{ order.email }}</td>
+            <td>{{ order.pickupStreet }}</td>
+            <td>{{ order.pickupCity }}</td>
+            <td>{{ order.pickupPostalCode }}</td>
+            <td>{{ order.deliveryStreet }}</td>
+            <td>{{ order.deliveryCity }}</td>
+            <td>{{ order.deliveryPostalCode }}</td>
+            <td>{{ order.packageWeight }} kg</td>
+            <td>{{ order.orderDescription || '—' }}</td>
+            <td>
+              <span [ngClass]="{
+                'status-pending': order.statusName === 'Pending',
+                'status-transit': order.statusName === 'In Transit',
+                'status-delivered': order.statusName === 'Delivered',
+                'status-cancelled': order.statusName === 'Cancelled'
+              }">{{ order.statusName }}</span>
+            </td>
+            <td>{{ order.createdAt | date:'mediumDate' }}</td>
+            <td>{{ order.additionalNotes || 'N/A' }}</td>
+            <td>{{ order.pickupDate | date:'mediumDate' }}</td>
+          </tr>
+          <tr *ngIf="orders.length === 0 && !loadingOrders">
+            <td colspan="14" class="empty-cell">No orders placed yet.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+  </div>
+</div>
+
+
+
