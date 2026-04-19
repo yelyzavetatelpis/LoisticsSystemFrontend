@@ -12,23 +12,28 @@ export class AccountsService {
   constructor(private http: HttpClient) {}
 
 
+  // get all users for admin user management
   getUsers() {
     return this.http.get<any[]>(this.apiUrl);
   }
 
 
+  // delete user by id
   deleteUser(userId: number) {
     return this.http.delete(`${this.apiUrl}/${userId}`);
   }
 
 
+  // update user details
   updateUser(user: any) {
     return this.http.put(`${this.apiUrl}/${user.userId}`, user);
   }
-  getDrivers() {
-  return this.http.get<any[]>(`${this.apiUrl}/drivers`);
-}
-}
 
+
+  // get all drivers for drivers management page
+  getDrivers() {
+    return this.http.get<any[]>(`${this.apiUrl}/drivers`);
+  }
+}
 
 
